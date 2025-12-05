@@ -1,0 +1,11 @@
+[project]
+name = "azure-cloud-booking-service"
+version = "0.1.0"
+description = "Cloud booking service for pet grooming appointments"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "sqlalchemy>=2.0.44",
+    "pyodbc>=5.2.0",
+    "python-dotenv>=1.2.1",
+]
