@@ -20,6 +20,7 @@ ENV/
 .env
 **/.env
 .envrc
+env/
 
 # Dev-only folders
 tests/
