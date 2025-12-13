@@ -191,6 +191,9 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# Local generated summary
+TEST_SUMMARY.md
+
 # PyPI configuration file
 .pypirc
 
