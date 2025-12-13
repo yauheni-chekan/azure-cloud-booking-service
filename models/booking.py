@@ -35,8 +35,12 @@ class Booking(Base):
     booking_date_time: Mapped[datetime] = mapped_column(DateTime, index=True)
     booking_status: Mapped[str] = mapped_column(String(20), default=BookingStatus.PENDING.value)
     groomer_id: Mapped[uuid.UUID] = mapped_column(index=True)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id", ondelete="CASCADE"), index=True)
-    pet_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("pets.pet_id", ondelete="NO ACTION"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.user_id", ondelete="CASCADE"), index=True
+    )
+    pet_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("pets.pet_id", ondelete="NO ACTION"), index=True
+    )
     rating: Mapped[Decimal | None] = mapped_column(Numeric(precision=3, scale=2))
 
     # Relationships

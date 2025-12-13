@@ -27,7 +27,9 @@ class User(Base):
     # Relationships
     pets: Mapped[list["Pet"]] = relationship(back_populates="owner", cascade="all, delete-orphan")
     bookings: Mapped[list["Booking"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan", foreign_keys="[Booking.user_id]",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        foreign_keys="[Booking.user_id]",
     )
 
     def __repr__(self) -> str:

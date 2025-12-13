@@ -19,7 +19,9 @@ class Pet(Base):
     __tablename__ = "pets"
 
     pet_id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id", ondelete="CASCADE"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.user_id", ondelete="CASCADE"), index=True
+    )
     name: Mapped[str] = mapped_column(String(100))
     breed: Mapped[str | None] = mapped_column(String(100))
     species: Mapped[str] = mapped_column(String(50))

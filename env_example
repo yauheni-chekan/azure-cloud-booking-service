@@ -1,1 +1,12 @@
-DB_CONNECTION_STRING=Driver=<your_connection_string>
+# Database Configuration
+DB_CONNECTION_STRING=Driver={ODBC Driver 18 for SQL Server};Server=tcp:<your-server>.database.windows.net,1433;Database=<your-database>;Uid=<your-username>;Pwd=<your-password>;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
+
+# Azure Service Bus Configuration
+# Get this from Azure Portal -> Service Bus Namespace -> Shared access policies -> RootManageSharedAccessKey
+SERVICE_BUS_CONNECTION_STRING=Endpoint=sb://<your-namespace>.servicebus.windows.net/;SharedAccessKeyName=<key-name>;SharedAccessKey=<key>
+SERVICE_BUS_QUEUE_NAME=<your-queue-name>
+
+# Application Configuration (Optional)
+APP_NAME=azure-cloud-booking-service
+APP_VERSION=0.1.0
+DEBUG=false

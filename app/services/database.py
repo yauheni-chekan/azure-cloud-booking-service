@@ -78,7 +78,7 @@ def create_engine_from_connection_string(
     :return: SQLAlchemy Engine instance
 
     Example:
-        >>> conn_str = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:my-sql.database.windows.net,1433;..."
+        >>> conn_str = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:my-sql.database.window..."
         >>> engine = create_engine_from_connection_string(conn_str)
 
     """

@@ -9,28 +9,39 @@ from decimal import Decimal
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
+from app.services import DatabaseManager, create_engine_from_connection_string
 from models import (
     Booking,
     BookingStatus,
     Pet,
     User,
 )
-from service import DatabaseManager, create_engine_from_connection_string
 
 load_dotenv()
 
 time_format = "%Y-%m-%d %H:%M:%S"
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s | %(name)s | %(levelname)s | %(message)s", datefmt=time_format,
+    level=logging.INFO,
+    format="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
+    datefmt=time_format,
 )
 logger = logging.getLogger("Booking Service Demo")
 
 
 def create_users(session: Session) -> None:
     """Create new users."""
-    u1 = User(first_name="John", last_name="Doe", email="john.doe@example.com", phone="+1-555-123-4567")
-    u2 = User(first_name="Jane", last_name="Smith", email="jane.smith@example.com", phone="+1-555-987-6543")
-    u3 = User(first_name="Jim", last_name="Beam", email="jim.beam@example.com", phone="+1-555-123-7890")
+    u1 = User(
+        first_name="John", last_name="Doe", email="john.doe@example.com", phone="+1-555-123-4567"
+    )
+    u2 = User(
+        first_name="Jane",
+        last_name="Smith",
+        email="jane.smith@example.com",
+        phone="+1-555-987-6543",
+    )
+    u3 = User(
+        first_name="Jim", last_name="Beam", email="jim.beam@example.com", phone="+1-555-123-7890"
+    )
     session.add_all([u1, u2, u3])
     session.flush()
     logger.info("Created users: %s", [u1, u2, u3])
