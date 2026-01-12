@@ -3,35 +3,11 @@
 from datetime import UTC, datetime
 
 from fastapi import APIRouter
-from pydantic import BaseModel, Field
 
+from app.api.v1.schemas import HealthResponse
 from app.config import settings
 
 router = APIRouter()
-
-
-class HealthResponse(BaseModel):
-    """Health check response model."""
-
-    status: str = Field(
-        ...,
-        description="Health status of the service",
-        examples=["healthy"],
-    )
-    service: str = Field(
-        ...,
-        description="Service name",
-        examples=["azure-cloud-booking-service"],
-    )
-    version: str = Field(
-        ...,
-        description="Service version",
-        examples=["0.1.0"],
-    )
-    timestamp: datetime = Field(
-        ...,
-        description="Current server timestamp in UTC",
-    )
 
 
 @router.get(

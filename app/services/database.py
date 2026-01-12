@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.config import settings
 from models import Base
 
 
@@ -69,11 +70,17 @@ def create_engine_from_connection_string(
     connection_string: str,
     *,
     echo: bool = False,
+    pool_pre_ping: bool = True,
+    pool_recycle: int = 3600,
+    connect_args: dict | None = None,
 ) -> Engine:
     """Create a SQLAlchemy engine from an ODBC connection string.
 
     :param connection_string: Full ODBC connection string
     :param echo: Whether to log SQL statements (default: False)
+    :param pool_pre_ping: Enable connection health checks (default: True)
+    :param pool_recycle: Recycle connections after this many seconds (default: 3600)
+    :param connect_args: Additional connection arguments
 
     :return: SQLAlchemy Engine instance
 
@@ -85,7 +92,21 @@ def create_engine_from_connection_string(
     encoded_connection_string = urllib.parse.quote_plus(connection_string)
     connection_url = f"mssql+pyodbc:///?odbc_connect={encoded_connection_string}"
 
-    return create_engine(connection_url, echo=echo)
+    # Default connection arguments for better Azure SQL compatibility
+    default_connect_args = {
+        "timeout": 30,
+        "autocommit": False,
+    }
+    if connect_args:
+        default_connect_args.update(connect_args)
+
+    return create_engine(
+        connection_url,
+        echo=echo,
+        pool_pre_ping=pool_pre_ping,
+        pool_recycle=pool_recycle,
+        connect_args=default_connect_args,
+    )
 
 
 class DatabaseManager:
@@ -135,3 +156,24 @@ class DatabaseManager:
             raise
         finally:
             session.close()
+
+
+# Create engine with improved connection settings
+try:
+    engine = create_engine_from_connection_string(
+        settings.db_connection_string,
+        pool_pre_ping=True,  # Verify connections before using
+        pool_recycle=3600,  # Recycle connections after 1 hour
+    )
+    db = DatabaseManager(engine)
+except Exception as e:
+    import logging
+
+    logger = logging.getLogger(__name__)
+    logger.error(
+        "Failed to create database engine. "
+        "Please check your DB_CONNECTION_STRING environment variable. "
+        "Error: %s",
+        str(e),
+    )
+    raise

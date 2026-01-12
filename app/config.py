@@ -27,6 +27,16 @@ class Settings(BaseSettings):
     # Database Configuration
     db_connection_string: str = Field(..., description="Database connection string for Azure SQL")
 
+    # Groomer Service Configuration
+    groomer_service_url: str = Field(
+        default="http://localhost:8002",
+        description="Base URL for the groomer service",
+    )
+    groomer_service_search_path: str = Field(
+        default="/api/v1/groomers/search",
+        description="Path to the groomer search endpoint",
+    )
+
     # Application Configuration
     app_name: str = Field(default="azure-cloud-booking-service", description="Application name")
     app_version: str = Field(default="0.1.0", description="Application version")

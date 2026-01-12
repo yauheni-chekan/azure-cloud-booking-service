@@ -9,7 +9,7 @@ from fastapi.responses import RedirectResponse
 
 from app.api.v1 import router as api_v1_router
 from app.config import settings
-from app.services import service_bus_receiver
+from app.services import db, service_bus_receiver
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,6 +30,18 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     # Startup
     logger.info("Starting %s v%s", settings.app_name, settings.app_version)
     logger.info("Debug mode: %s", settings.debug)
+
+    # Initialize database tables
+    try:
+        logger.info("Initializing database tables...")
+        db.create_tables()
+        logger.info("Database tables initialized successfully")
+    except Exception as e:
+        logger.exception("Failed to initialize database tables: %s", str(e))
+        # Don't raise - allow app to start even if tables already exist
+        # SQLAlchemy's create_all() is idempotent, but log any unexpected errors
+        if "already exists" not in str(e).lower() and "duplicate" not in str(e).lower():
+            logger.warning("Database table creation encountered an error, but continuing startup")
 
     try:
         await service_bus_receiver.start()
@@ -62,7 +74,7 @@ app = FastAPI(
 
 
 # Include API v1 router
-app.include_router(api_v1_router, prefix="/api/v1", tags=["v1"])
+app.include_router(api_v1_router, prefix="/api/v1")
 
 
 @app.get("/", include_in_schema=False)
