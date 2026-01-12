@@ -1,0 +1,20 @@
+services:
+  complaint-service:
+    build: .
+    image: complaint-service:local
+    container_name: complaint-service
+    env_file:
+      - ./env/complaint-service.env
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
+
+  boking-service:
+    build: .
+    image: booking-service:local
+    container_name: boking-service
+    env_file:
+      - ./env/boking-service.env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
