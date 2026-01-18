@@ -21,6 +21,8 @@ class TestSettings:
                 "SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://test.servicebus.windows.net/",
                 "SERVICE_BUS_QUEUE_NAME": "test-queue",
                 "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=test.database.windows.net;",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test==;EndpointSuffix=core.windows.net",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
             },
             clear=True,
         ):
@@ -42,6 +44,8 @@ class TestSettings:
                 "SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://custom.servicebus.windows.net/",
                 "SERVICE_BUS_QUEUE_NAME": "custom-queue",
                 "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=custom.database.windows.net;",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test==;EndpointSuffix=core.windows.net",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
             },
             clear=True,
         ):
@@ -119,6 +123,8 @@ class TestSettings:
                     "SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://test.servicebus.windows.net/",
                     "SERVICE_BUS_QUEUE_NAME": "test-queue",
                     "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=test.database.windows.net;",  # noqa: E501
+                    "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test==;EndpointSuffix=core.windows.net",  # noqa: E501
+                    "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
                 },
                 clear=True,
             ):
@@ -134,6 +140,8 @@ class TestSettings:
                 "SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://test.servicebus.windows.net/",
                 "SERVICE_BUS_QUEUE_NAME": "test-queue",
                 "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=test.database.windows.net;",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test==;EndpointSuffix=core.windows.net",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
             },
             clear=True,
         ):
@@ -148,6 +156,8 @@ class TestSettings:
                 "SERVICE_BUS_CONNECTION_STRING": "invalid-connection-string",
                 "SERVICE_BUS_QUEUE_NAME": "test-queue",
                 "DB_CONNECTION_STRING": "invalid-db-connection-string",
+                "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "invalid-storage-connection-string",
+                "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
             },
             clear=True,
         ):
@@ -163,6 +173,8 @@ class TestSettings:
                 "SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://test.servicebus.windows.net/",
                 "SERVICE_BUS_QUEUE_NAME": "test-queue",
                 "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=test.database.windows.net;",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test==;EndpointSuffix=core.windows.net",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
             },
             clear=True,
         ):
@@ -179,6 +191,8 @@ class TestSettings:
                 "SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://test.servicebus.windows.net/",
                 "SERVICE_BUS_QUEUE_NAME": "test-queue",
                 "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=test.database.windows.net;",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test==;EndpointSuffix=core.windows.net",  # noqa: E501
+                "UNIFIED_LOGS_STORAGE_QUEUE_NAME": "test-logs-queue",
             },
             clear=True,
         ):

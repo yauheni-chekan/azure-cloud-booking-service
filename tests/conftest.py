@@ -19,7 +19,14 @@ os.environ.setdefault(
     "DB_CONNECTION_STRING",
     "Driver={ODBC Driver 18 for SQL Server};Server=tcp:test.database.windows.net,1433;Database=test;",  # noqa: E501
 )
-
+os.environ.setdefault(
+    "UNIFIED_LOGS_STORAGE_CONNECTION_STRING",
+    "DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test123;EndpointSuffix=core.windows.net",
+)
+os.environ.setdefault(
+    "UNIFIED_LOGS_STORAGE_QUEUE_NAME",
+    "test-queue",
+)
 
 @pytest.fixture
 def mock_service_bus_client() -> MagicMock:
