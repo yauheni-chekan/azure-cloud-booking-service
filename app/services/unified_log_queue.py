@@ -92,4 +92,5 @@ def get_unified_log_sender() -> UnifiedLogQueueSender | None:
         queue_name=settings.unified_logs_storage_queue_name,
     )
 
+
 log_sender = get_unified_log_sender()

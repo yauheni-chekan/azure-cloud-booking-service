@@ -55,7 +55,11 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         raise
 
     if log_sender:
-        await log_sender.send(level="info", event="booking_service.app_started", message="Application started successfully")
+        await log_sender.send(
+            level="info",
+            event="booking_service.app_started",
+            message="Application started successfully",
+        )
 
     yield
     logger.info("Shutting down application...")
@@ -68,7 +72,11 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
     logger.info("Application shutdown complete")
     if log_sender:
-        await log_sender.send(level="info", event="booking_service.app_shutdown", message="Application shutdown complete")
+        await log_sender.send(
+            level="info",
+            event="booking_service.app_shutdown",
+            message="Application shutdown complete",
+        )
 
 
 app = FastAPI(

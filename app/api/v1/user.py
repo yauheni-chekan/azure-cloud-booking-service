@@ -86,7 +86,11 @@ async def create_user(user_data: UserCreate) -> UserResponse:
         session.add(new_user)
         session.flush()
         if unified_log_sender:
-            await unified_log_sender.send(level="info", event="booking_service.user_created", message=f"User {new_user.email} created successfully")
+            await unified_log_sender.send(
+                level="info",
+                event="booking_service.user_created",
+                message=f"User {new_user.email} created successfully",
+            )
         return UserResponse.model_validate(new_user)
 
 
@@ -129,7 +133,11 @@ async def update_user(user_id: uuid.UUID, user_data: UserUpdate) -> UserResponse
 
         session.flush()
         if unified_log_sender:
-            await unified_log_sender.send(level="info", event="booking_service.user_updated", message=f"User {user.email} updated successfully")
+            await unified_log_sender.send(
+                level="info",
+                event="booking_service.user_updated",
+                message=f"User {user.email} updated successfully",
+            )
         return UserResponse.model_validate(user)
 
 
@@ -154,7 +162,11 @@ async def delete_user(user_id: uuid.UUID) -> UserResponse:
         session.delete(user)
         session.flush()
         if unified_log_sender:
-            await unified_log_sender.send(level="info", event="booking_service.user_deleted", message=f"User {user.email} deleted successfully")
+            await unified_log_sender.send(
+                level="info",
+                event="booking_service.user_deleted",
+                message=f"User {user.email} deleted successfully",
+            )
         return user_response
 
 
@@ -225,7 +237,11 @@ async def create_pet(user_id: uuid.UUID, pet_data: PetCreate) -> PetResponse:
         session.add(new_pet)
         session.flush()
         if unified_log_sender:
-            await unified_log_sender.send(level="info", event="booking_service.pet_created", message=f"Pet {new_pet.name} created successfully")
+            await unified_log_sender.send(
+                level="info",
+                event="booking_service.pet_created",
+                message=f"Pet {new_pet.name} created successfully",
+            )
         return PetResponse.model_validate(new_pet)
 
 

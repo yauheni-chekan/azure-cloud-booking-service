@@ -71,7 +71,11 @@ async def update_pet(pet_id: uuid.UUID, pet_data: PetUpdate) -> PetResponse:
 
         session.flush()
         if unified_log_sender:
-            await unified_log_sender.send(level="info", event="booking_service.pet_updated", message=f"Pet {pet.name} updated successfully")
+            await unified_log_sender.send(
+                level="info",
+                event="booking_service.pet_updated",
+                message=f"Pet {pet.name} updated successfully",
+            )
         return PetResponse.model_validate(pet)
 
 
@@ -96,5 +100,9 @@ async def delete_pet(pet_id: uuid.UUID) -> PetResponse:
         session.delete(pet)
         session.flush()
         if unified_log_sender:
-            await unified_log_sender.send(level="info", event="booking_service.pet_deleted", message=f"Pet {pet.name} deleted successfully")
+            await unified_log_sender.send(
+                level="info",
+                event="booking_service.pet_deleted",
+                message=f"Pet {pet.name} deleted successfully",
+            )
         return pet_response

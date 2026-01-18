@@ -54,7 +54,11 @@ async def create_booking(booking_data: BookingCreate) -> BookingResponse:
         session.add(new_booking)
         session.flush()
         if log_sender:
-            await log_sender.send(level="info", event="booking_service.booking_created", message=f"Booking {new_booking.booking_id} created successfully")
+            await log_sender.send(
+                level="info",
+                event="booking_service.booking_created",
+                message=f"Booking {new_booking.booking_id} created successfully",
+            )
         return BookingResponse.model_validate(new_booking)
 
 
@@ -126,7 +130,11 @@ async def update_booking(booking_id: uuid.UUID, booking_data: BookingUpdate) -> 
 
         session.flush()
         if log_sender:
-            await log_sender.send(level="info", event="booking_service.booking_updated", message=f"Booking {booking.booking_id} updated successfully")
+            await log_sender.send(
+                level="info",
+                event="booking_service.booking_updated",
+                message=f"Booking {booking.booking_id} updated successfully",
+            )
         return BookingResponse.model_validate(booking)
 
 
@@ -151,5 +159,9 @@ async def cancel_booking(booking_id: uuid.UUID) -> BookingResponse:
         session.delete(booking)
         session.flush()
         if log_sender:
-            await log_sender.send(level="info", event="booking_service.booking_cancelled", message=f"Booking {booking_id} cancelled successfully")
+            await log_sender.send(
+                level="info",
+                event="booking_service.booking_cancelled",
+                message=f"Booking {booking_id} cancelled successfully",
+            )
         return booking_response
