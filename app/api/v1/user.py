@@ -4,7 +4,14 @@ import uuid
 
 from fastapi import APIRouter, HTTPException, Query, status
 
-from app.api.v1.schemas import BookingResponse, PetCreate, PetResponse, UserCreate, UserResponse, UserUpdate
+from app.api.v1.schemas import (
+    BookingResponse,
+    PetCreate,
+    PetResponse,
+    UserCreate,
+    UserResponse,
+    UserUpdate,
+)
 from app.services.database import db
 from models import Booking, BookingStatus, Pet, User
 

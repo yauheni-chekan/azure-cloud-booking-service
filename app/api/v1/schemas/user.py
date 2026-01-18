@@ -8,12 +8,8 @@ from pydantic import BaseModel, EmailStr, Field
 class UserBase(BaseModel):
     """Base user schema with common fields."""
 
-    first_name: str = Field(
-        ..., min_length=1, max_length=100, description="User's first name"
-    )
-    last_name: str = Field(
-        ..., min_length=1, max_length=100, description="User's last name"
-    )
+    first_name: str = Field(..., min_length=1, max_length=100, description="User's first name")
+    last_name: str = Field(..., min_length=1, max_length=100, description="User's last name")
     email: EmailStr = Field(..., description="User's email address")
     phone: str | None = Field(None, max_length=20, description="User's phone number")
 
@@ -43,7 +39,7 @@ class UserResponse(UserBase):
     user_id: uuid.UUID = Field(..., description="Unique user identifier")
     bookings_taken: int = Field(0, description="Number of bookings taken by the user")
 
-    class Config:
+    class ConfigDict:
         """Pydantic configuration."""
 
         from_attributes = True

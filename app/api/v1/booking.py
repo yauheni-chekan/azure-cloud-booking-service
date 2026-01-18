@@ -84,9 +84,7 @@ async def get_booking(booking_id: uuid.UUID) -> BookingResponse:
     response_model=BookingResponse,
     status_code=status.HTTP_200_OK,
 )
-async def update_booking(
-    booking_id: uuid.UUID, booking_data: BookingUpdate
-) -> BookingResponse:
+async def update_booking(booking_id: uuid.UUID, booking_data: BookingUpdate) -> BookingResponse:
     """Update a booking by its ID."""
     with db.session_scope() as session:
         booking = session.query(Booking).filter(Booking.booking_id == booking_id).first()

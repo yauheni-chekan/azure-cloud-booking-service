@@ -20,7 +20,7 @@ class BookingResponse(BaseModel):
     pet_id: uuid.UUID = Field(..., description="Pet identifier")
     rating: Decimal | None = Field(None, description="Customer rating")
 
-    class Config:
+    class ConfigDict:
         """Pydantic configuration."""
 
         from_attributes = True
@@ -35,26 +35,14 @@ class BookingCreate(BaseModel):
     booking_status: BookingStatus | None = Field(
         None, description="Booking status (defaults to pending)"
     )
-    rating: Decimal | None = Field(
-        None, ge=0, le=5, description="Customer rating (0-5)"
-    )
+    rating: Decimal | None = Field(None, ge=0, le=5, description="Customer rating (0-5)")
 
 
 class BookingUpdate(BaseModel):
     """Schema for updating a booking."""
 
-    booking_date_time: datetime | None = Field(
-        None, description="Appointment date and time"
-    )
-    booking_status: BookingStatus | None = Field(
-        None, description="Booking status"
-    )
-    groomer_id: uuid.UUID | None = Field(
-        None, description="Assigned groomer identifier"
-    )
-    pet_id: uuid.UUID | None = Field(
-        None, description="Pet identifier"
-    )
-    rating: Decimal | None = Field(
-        None, ge=0, le=5, description="Customer rating (0-5)"
-    )
+    booking_date_time: datetime | None = Field(None, description="Appointment date and time")
+    booking_status: BookingStatus | None = Field(None, description="Booking status")
+    groomer_id: uuid.UUID | None = Field(None, description="Assigned groomer identifier")
+    pet_id: uuid.UUID | None = Field(None, description="Pet identifier")
+    rating: Decimal | None = Field(None, ge=0, le=5, description="Customer rating (0-5)")

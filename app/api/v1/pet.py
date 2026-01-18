@@ -51,7 +51,7 @@ async def update_pet(pet_id: uuid.UUID, pet_data: PetUpdate) -> PetResponse:
 
         # Update fields if provided (using model_dump to get only explicitly set fields)
         update_data = pet_data.model_dump(exclude_unset=True)
-        
+
         if "name" in update_data:
             pet.name = update_data["name"]
         if "species" in update_data:

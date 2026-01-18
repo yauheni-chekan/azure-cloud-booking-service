@@ -14,7 +14,7 @@ class GroomerResponse(BaseModel):
     specialization: str | None = Field(None, description="Groomer specialization type")
     rating: Decimal | None = Field(None, description="Groomer rating")
 
-    class Config:
+    class ConfigDict:
         """Pydantic configuration."""
 
         from_attributes = True

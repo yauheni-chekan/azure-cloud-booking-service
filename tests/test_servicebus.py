@@ -28,7 +28,10 @@ class TestServiceBusReceiverService:
         assert service._task is None
 
     async def test_start_creates_client_and_task(
-        self, service: ServiceBusReceiverService, mock_service_bus_client, mock_settings  # noqa: ARG002
+        self,
+        service: ServiceBusReceiverService,
+        mock_service_bus_client,
+        mock_settings,  # noqa: ARG002
     ) -> None:
         with (
             patch(
@@ -48,7 +51,9 @@ class TestServiceBusReceiverService:
             recv.assert_awaited()
 
     async def test_start_is_idempotent(
-        self, service: ServiceBusReceiverService, mock_settings  # noqa: ARG002
+        self,
+        service: ServiceBusReceiverService,
+        mock_settings,  # noqa: ARG002
     ) -> None:
         service._running = True
         service._task = MagicMock()
@@ -119,7 +124,10 @@ class TestServiceBusReceiverService:
         assert mock_service_bus_receiver.complete_message.await_count == len(mock_messages)
 
     async def test_receive_messages_sleeps_on_error_and_retries(
-        self, service: ServiceBusReceiverService, mock_service_bus_client, mock_settings  # noqa: ARG002
+        self,
+        service: ServiceBusReceiverService,
+        mock_service_bus_client,
+        mock_settings,  # noqa: ARG002
     ) -> None:
         service.client = mock_service_bus_client
         service._running = True

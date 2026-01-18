@@ -20,9 +20,7 @@ logger = logging.getLogger(__name__)
     status_code=status.HTTP_200_OK,
 )
 async def search_groomers(
-    location: str | None = Query(
-        None, description="Filter groomers by location", alias="location"
-    ),
+    location: str | None = Query(None, description="Filter groomers by location", alias="location"),
     specialization: str | None = Query(
         None, description="Filter groomers by specialization type", alias="specialization"
     ),
@@ -108,15 +106,11 @@ async def search_groomers(
 
     if specialization:
         filtered_groomers = [
-            g
-            for g in filtered_groomers
-            if g["specialization"].lower() == specialization.lower()
+            g for g in filtered_groomers if g["specialization"].lower() == specialization.lower()
         ]
 
     if min_rating is not None:
-        filtered_groomers = [
-            g for g in filtered_groomers if g["rating"] >= min_rating
-        ]
+        filtered_groomers = [g for g in filtered_groomers if g["rating"] >= min_rating]
 
     logger.info("Returning %d groomers matching filters", len(filtered_groomers))
     return [GroomerResponse.model_validate(groomer) for groomer in filtered_groomers]
