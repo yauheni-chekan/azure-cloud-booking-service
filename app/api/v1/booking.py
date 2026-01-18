@@ -5,7 +5,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status
 
 from app.api.v1.schemas import BookingCreate, BookingResponse, BookingUpdate
-from app.services.database import db
+from app.services import db, log_sender
 from models import Booking, BookingStatus, Pet, User
 
 router = APIRouter(prefix="/bookings", tags=["bookings"])
@@ -53,6 +53,8 @@ async def create_booking(booking_data: BookingCreate) -> BookingResponse:
         )
         session.add(new_booking)
         session.flush()
+        if log_sender:
+            await log_sender.send(level="info", event="booking_service.booking_created", message=f"Booking {new_booking.booking_id} created successfully")
         return BookingResponse.model_validate(new_booking)
 
 
@@ -123,6 +125,8 @@ async def update_booking(booking_id: uuid.UUID, booking_data: BookingUpdate) -> 
             booking.rating = update_data["rating"]
 
         session.flush()
+        if log_sender:
+            await log_sender.send(level="info", event="booking_service.booking_updated", message=f"Booking {booking.booking_id} updated successfully")
         return BookingResponse.model_validate(booking)
 
 
@@ -146,4 +150,6 @@ async def cancel_booking(booking_id: uuid.UUID) -> BookingResponse:
         booking_response = BookingResponse.model_validate(booking)
         session.delete(booking)
         session.flush()
+        if log_sender:
+            await log_sender.send(level="info", event="booking_service.booking_cancelled", message=f"Booking {booking_id} cancelled successfully")
         return booking_response

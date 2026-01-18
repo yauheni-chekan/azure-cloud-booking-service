@@ -18,3 +18,13 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+
+  groomer-service:
+    build: .
+    image: groomer-service:local
+    container_name: groomer-service
+    env_file:
+      - ./env/groomer-service.env
+    ports:
+      - "8002:8000"
+    restart: unless-stopped

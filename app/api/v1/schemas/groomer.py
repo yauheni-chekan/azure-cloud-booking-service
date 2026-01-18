@@ -1,18 +1,21 @@
 """Groomer schemas."""
 
-from decimal import Decimal
-
 from pydantic import BaseModel, Field
 
 
 class GroomerResponse(BaseModel):
-    """Schema for groomer response from external service."""
+    """Schema for groomer response from external service (GroomerRead)."""
 
     groomer_id: str = Field(..., description="Unique groomer identifier")
-    name: str = Field(..., description="Groomer name")
+    first_name: str = Field(..., description="Groomer's first name")
+    last_name: str = Field(..., description="Groomer's last name")
     location: str = Field(..., description="Groomer location")
     specialization: str | None = Field(None, description="Groomer specialization type")
-    rating: Decimal | None = Field(None, description="Groomer rating")
+    status: str = Field(..., description="Groomer status")
+    rating: float = Field(..., description="Groomer rating")
+    review_count: int = Field(..., description="Number of reviews")
+    complaint_count: int = Field(..., description="Number of complaints")
+    total_bookings_count: int = Field(..., description="Total number of bookings")
 
     class ConfigDict:
         """Pydantic configuration."""

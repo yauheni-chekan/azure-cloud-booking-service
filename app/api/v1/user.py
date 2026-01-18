@@ -13,9 +13,13 @@ from app.api.v1.schemas import (
     UserUpdate,
 )
 from app.services.database import db
+from app.services.unified_log_queue import get_unified_log_sender
 from models import Booking, BookingStatus, Pet, User
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+# Initialize unified log sender
+unified_log_sender = get_unified_log_sender()
 
 
 @router.get(
@@ -81,6 +85,8 @@ async def create_user(user_data: UserCreate) -> UserResponse:
         )
         session.add(new_user)
         session.flush()
+        if unified_log_sender:
+            await unified_log_sender.send(level="info", event="booking_service.user_created", message=f"User {new_user.email} created successfully")
         return UserResponse.model_validate(new_user)
 
 
@@ -122,6 +128,8 @@ async def update_user(user_id: uuid.UUID, user_data: UserUpdate) -> UserResponse
             user.phone = user_data.phone
 
         session.flush()
+        if unified_log_sender:
+            await unified_log_sender.send(level="info", event="booking_service.user_updated", message=f"User {user.email} updated successfully")
         return UserResponse.model_validate(user)
 
 
@@ -145,6 +153,8 @@ async def delete_user(user_id: uuid.UUID) -> UserResponse:
         user_response = UserResponse.model_validate(user)
         session.delete(user)
         session.flush()
+        if unified_log_sender:
+            await unified_log_sender.send(level="info", event="booking_service.user_deleted", message=f"User {user.email} deleted successfully")
         return user_response
 
 
@@ -214,6 +224,8 @@ async def create_pet(user_id: uuid.UUID, pet_data: PetCreate) -> PetResponse:
         )
         session.add(new_pet)
         session.flush()
+        if unified_log_sender:
+            await unified_log_sender.send(level="info", event="booking_service.pet_created", message=f"Pet {new_pet.name} created successfully")
         return PetResponse.model_validate(new_pet)
 
 

@@ -6,9 +6,13 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.api.v1.schemas import PetResponse, PetUpdate
 from app.services.database import db
+from app.services.unified_log_queue import get_unified_log_sender
 from models import Pet
 
 router = APIRouter(prefix="/pets", tags=["pets"])
+
+# Initialize unified log sender
+unified_log_sender = get_unified_log_sender()
 
 
 @router.get(
@@ -66,6 +70,8 @@ async def update_pet(pet_id: uuid.UUID, pet_data: PetUpdate) -> PetResponse:
             pet.special_instructions = update_data["special_instructions"]
 
         session.flush()
+        if unified_log_sender:
+            await unified_log_sender.send(level="info", event="booking_service.pet_updated", message=f"Pet {pet.name} updated successfully")
         return PetResponse.model_validate(pet)
 
 
@@ -89,4 +95,6 @@ async def delete_pet(pet_id: uuid.UUID) -> PetResponse:
         pet_response = PetResponse.model_validate(pet)
         session.delete(pet)
         session.flush()
+        if unified_log_sender:
+            await unified_log_sender.send(level="info", event="booking_service.pet_deleted", message=f"Pet {pet.name} deleted successfully")
         return pet_response

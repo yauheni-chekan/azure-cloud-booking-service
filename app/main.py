@@ -9,7 +9,7 @@ from fastapi.responses import RedirectResponse
 
 from app.api.v1 import router as api_v1_router
 from app.config import settings
-from app.services import db, service_bus_receiver
+from app.services import db, log_sender, service_bus_receiver
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,6 +30,10 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     # Startup
     logger.info("Starting %s v%s", settings.app_name, settings.app_version)
     logger.info("Debug mode: %s", settings.debug)
+    if log_sender:
+        logger.info("Log sender initialized")
+    else:
+        logger.warning("Failed to initialize log sender")
 
     # Initialize database tables
     try:
@@ -50,6 +54,9 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         logger.exception("Failed to start Service Bus receiver")
         raise
 
+    if log_sender:
+        await log_sender.send(level="info", event="booking_service.app_started", message="Application started successfully")
+
     yield
     logger.info("Shutting down application...")
 
@@ -60,6 +67,8 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         logger.exception("Error stopping Service Bus receiver")
 
     logger.info("Application shutdown complete")
+    if log_sender:
+        await log_sender.send(level="info", event="booking_service.app_shutdown", message="Application shutdown complete")
 
 
 app = FastAPI(

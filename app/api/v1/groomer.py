@@ -1,11 +1,12 @@
 """Groomer API endpoints."""
 
 import logging
-from decimal import Decimal
 
-from fastapi import APIRouter, Query, status
+import httpx
+from fastapi import APIRouter, HTTPException, Query, status
 
 from app.api.v1.schemas import GroomerResponse
+from app.config import settings
 
 router = APIRouter(prefix="/groomers", tags=["groomers"])
 logger = logging.getLogger(__name__)
@@ -20,15 +21,15 @@ logger = logging.getLogger(__name__)
     status_code=status.HTTP_200_OK,
 )
 async def search_groomers(
-    location: str | None = Query(None, description="Filter groomers by location", alias="location"),
-    specialization: str | None = Query(
-        None, description="Filter groomers by specialization type", alias="specialization"
-    ),
-    min_rating: Decimal | None = Query(
+    location: str | None = Query(None, description="Filter groomers by location"),
+    specialization: str | None = Query(None, description="Filter groomers by specialization type"),
+    min_rating: float | None = Query(
         None, ge=0, le=5, description="Minimum rating filter", alias="minRating"
     ),
+    skip: int = Query(0, ge=0, description="Number of records to skip"),
+    limit: int = Query(100, ge=1, le=100, description="Maximum number of records to return"),
 ) -> list[GroomerResponse]:
-    """Search for groomers - returns mock data for now."""
+    """Search for groomers by calling the external groomer service."""
     logger.info(
         "Searching groomers with filters - location: %s, specialization: %s, minRating: %s",
         location,
@@ -36,81 +37,60 @@ async def search_groomers(
         min_rating,
     )
 
-    # Mock groomer data
-    mock_groomers = [
-        {
-            "groomer_id": "groomer-001",
-            "name": "Sarah Johnson",
-            "location": "New York",
-            "specialization": "Dog",
-            "rating": Decimal("4.8"),
-        },
-        {
-            "groomer_id": "groomer-002",
-            "name": "Mike Chen",
-            "location": "Los Angeles",
-            "specialization": "Cat",
-            "rating": Decimal("4.5"),
-        },
-        {
-            "groomer_id": "groomer-003",
-            "name": "Emily Rodriguez",
-            "location": "New York",
-            "specialization": "Dog",
-            "rating": Decimal("4.9"),
-        },
-        {
-            "groomer_id": "groomer-004",
-            "name": "David Kim",
-            "location": "Chicago",
-            "specialization": "Small Pets",
-            "rating": Decimal("4.2"),
-        },
-        {
-            "groomer_id": "groomer-005",
-            "name": "Lisa Thompson",
-            "location": "Los Angeles",
-            "specialization": "Dog",
-            "rating": Decimal("4.7"),
-        },
-        {
-            "groomer_id": "groomer-006",
-            "name": "James Wilson",
-            "location": "Miami",
-            "specialization": "Cat",
-            "rating": Decimal("4.6"),
-        },
-        {
-            "groomer_id": "groomer-007",
-            "name": "Maria Garcia",
-            "location": "New York",
-            "specialization": "Small Pets",
-            "rating": Decimal("4.4"),
-        },
-        {
-            "groomer_id": "groomer-008",
-            "name": "Robert Brown",
-            "location": "Seattle",
-            "specialization": "Dog",
-            "rating": Decimal("4.3"),
-        },
-    ]
-
-    # Apply filters
-    filtered_groomers = mock_groomers
-
+    # Build query parameters for the groomer service
+    params = {
+        "skip": skip,
+        "limit": limit,
+    }
     if location:
-        filtered_groomers = [
-            g for g in filtered_groomers if g["location"].lower() == location.lower()
-        ]
-
+        params["location"] = location
     if specialization:
-        filtered_groomers = [
-            g for g in filtered_groomers if g["specialization"].lower() == specialization.lower()
-        ]
-
+        params["specialization"] = specialization
     if min_rating is not None:
-        filtered_groomers = [g for g in filtered_groomers if g["rating"] >= min_rating]
+        params["min_rating"] = min_rating
 
-    logger.info("Returning %d groomers matching filters", len(filtered_groomers))
-    return [GroomerResponse.model_validate(groomer) for groomer in filtered_groomers]
+    # Call the external groomer service
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        try:
+            groomer_service_url = f"{settings.groomer_service_url}/api/v1/groomers"
+            logger.info("Calling groomer service: %s with params: %s", groomer_service_url, params)
+
+            response = await client.get(groomer_service_url, params=params)
+            response.raise_for_status()
+            groomers_data = response.json()
+
+            return [GroomerResponse.model_validate(groomer) for groomer in groomers_data]
+
+        except httpx.TimeoutException:
+            logger.error("Timeout when calling groomer service")
+            raise HTTPException(
+                status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                detail="Groomer service request timed out",
+            )
+        except httpx.HTTPStatusError as e:
+            logger.error(
+                "Error calling groomer service: %s - %s",
+                e.response.status_code,
+                e.response.text,
+            )
+            if e.response.status_code == 404:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Groomer service endpoint not found",
+                )
+            elif e.response.status_code >= 500:
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail="Groomer service is unavailable",
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail=f"Error from groomer service: {e.response.text}",
+                )
+        except Exception as e:
+            logger.exception("Unexpected error calling groomer service: %s", str(e))
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Failed to communicate with groomer service",
+            )

@@ -24,6 +24,14 @@ class Settings(BaseSettings):
 
     service_bus_debug: bool = Field(default=False, description="Enable Service Bus debug logging")
 
+    # Unified Logs Storage Configuration
+    unified_logs_storage_connection_string: str = Field(
+        ..., description="Azure Storage connection string for unified logs"
+    )
+    unified_logs_storage_queue_name: str = Field(
+        ..., description="Azure Storage queue name for unified logs"
+    )
+
     # Database Configuration
     db_connection_string: str = Field(..., description="Database connection string for Azure SQL")
 
