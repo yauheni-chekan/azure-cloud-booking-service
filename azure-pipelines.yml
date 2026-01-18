@@ -59,6 +59,8 @@ stages:
 
       - job: Test
         displayName: "Run Tests"
+        dependsOn:
+          - Lint
         steps:
           - script: |
               mkdir -p junit
