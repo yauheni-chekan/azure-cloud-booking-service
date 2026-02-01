@@ -202,7 +202,9 @@ async def get_user_bookings(
             query = query.filter(Booking.booking_status == booking_status.value)
 
         bookings = query.all()
-        return [BookingResponse.model_validate(booking, from_attributes=True) for booking in bookings]
+        return [
+            BookingResponse.model_validate(booking, from_attributes=True) for booking in bookings
+        ]
 
 
 @router.post(
