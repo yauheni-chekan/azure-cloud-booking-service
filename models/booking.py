@@ -41,7 +41,6 @@ class Booking(Base):
     pet_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("pets.pet_id", ondelete="NO ACTION"), index=True
     )
-    rating: Mapped[Decimal | None] = mapped_column(Numeric(precision=3, scale=2))
 
     # Relationships
     user: Mapped["User"] = relationship(back_populates="bookings", foreign_keys=[user_id])

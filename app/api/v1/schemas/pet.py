@@ -3,7 +3,7 @@
 import uuid
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PetCreate(BaseModel):
@@ -24,6 +24,8 @@ class PetCreate(BaseModel):
 class PetResponse(BaseModel):
     """Schema for pet response."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     pet_id: uuid.UUID = Field(..., description="Unique pet identifier")
     user_id: uuid.UUID = Field(..., description="Owner's user identifier")
     name: str = Field(..., description="Pet's name")
@@ -32,11 +34,6 @@ class PetResponse(BaseModel):
     age: int | None = Field(None, description="Pet age in years")
     weight: Decimal | None = Field(None, description="Pet weight in kg")
     special_instructions: str | None = Field(None, description="Special care instructions")
-
-    class ConfigDict:
-        """Pydantic configuration."""
-
-        from_attributes = True
 
 
 class PetUpdate(BaseModel):

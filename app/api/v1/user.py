@@ -34,7 +34,7 @@ async def get_users() -> list[UserResponse]:
     """Get all users."""
     with db.session_scope() as session:
         users = session.query(User).all()
-        return [UserResponse.model_validate(user) for user in users]
+        return [UserResponse.model_validate(user, from_attributes=True) for user in users]
 
 
 @router.get(
@@ -54,7 +54,7 @@ async def get_user(user_id: uuid.UUID) -> UserResponse:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with ID {user_id} not found",
             )
-        return UserResponse.model_validate(user)
+        return UserResponse.model_validate(user, from_attributes=True)
 
 
 @router.post(
@@ -91,7 +91,7 @@ async def create_user(user_data: UserCreate) -> UserResponse:
                 event="booking_service.user_created",
                 message=f"User {new_user.email} created successfully",
             )
-        return UserResponse.model_validate(new_user)
+        return UserResponse.model_validate(new_user, from_attributes=True)
 
 
 @router.put(
@@ -138,7 +138,7 @@ async def update_user(user_id: uuid.UUID, user_data: UserUpdate) -> UserResponse
                 event="booking_service.user_updated",
                 message=f"User {user.email} updated successfully",
             )
-        return UserResponse.model_validate(user)
+        return UserResponse.model_validate(user, from_attributes=True)
 
 
 @router.delete(
@@ -158,7 +158,7 @@ async def delete_user(user_id: uuid.UUID) -> UserResponse:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with ID {user_id} not found",
             )
-        user_response = UserResponse.model_validate(user)
+        user_response = UserResponse.model_validate(user, from_attributes=True)
         session.delete(user)
         session.flush()
         if unified_log_sender:
@@ -202,7 +202,7 @@ async def get_user_bookings(
             query = query.filter(Booking.booking_status == booking_status.value)
 
         bookings = query.all()
-        return [BookingResponse.model_validate(booking) for booking in bookings]
+        return [BookingResponse.model_validate(booking, from_attributes=True) for booking in bookings]
 
 
 @router.post(
@@ -242,7 +242,7 @@ async def create_pet(user_id: uuid.UUID, pet_data: PetCreate) -> PetResponse:
                 event="booking_service.pet_created",
                 message=f"Pet {new_pet.name} created successfully",
             )
-        return PetResponse.model_validate(new_pet)
+        return PetResponse.model_validate(new_pet, from_attributes=True)
 
 
 @router.get(
@@ -266,4 +266,4 @@ async def get_user_pets(user_id: uuid.UUID) -> list[PetResponse]:
 
         # Query pets
         pets = session.query(Pet).filter(Pet.user_id == user_id).all()
-        return [PetResponse.model_validate(pet) for pet in pets]
+        return [PetResponse.model_validate(pet, from_attributes=True) for pet in pets]

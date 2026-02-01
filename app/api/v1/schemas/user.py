@@ -2,7 +2,7 @@
 
 import uuid
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class UserBase(BaseModel):
@@ -36,10 +36,7 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     """Schema for user response."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     user_id: uuid.UUID = Field(..., description="Unique user identifier")
     bookings_taken: int = Field(0, description="Number of bookings taken by the user")
-
-    class ConfigDict:
-        """Pydantic configuration."""
-
-        from_attributes = True

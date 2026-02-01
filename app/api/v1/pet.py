@@ -32,7 +32,7 @@ async def get_pet(pet_id: uuid.UUID) -> PetResponse:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Pet with ID {pet_id} not found",
             )
-        return PetResponse.model_validate(pet)
+        return PetResponse.model_validate(pet, from_attributes=True)
 
 
 @router.put(
@@ -76,7 +76,7 @@ async def update_pet(pet_id: uuid.UUID, pet_data: PetUpdate) -> PetResponse:
                 event="booking_service.pet_updated",
                 message=f"Pet {pet.name} updated successfully",
             )
-        return PetResponse.model_validate(pet)
+        return PetResponse.model_validate(pet, from_attributes=True)
 
 
 @router.delete(
@@ -96,7 +96,7 @@ async def delete_pet(pet_id: uuid.UUID) -> PetResponse:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Pet with ID {pet_id} not found",
             )
-        pet_response = PetResponse.model_validate(pet)
+        pet_response = PetResponse.model_validate(pet, from_attributes=True)
         session.delete(pet)
         session.flush()
         if unified_log_sender:
